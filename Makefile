@@ -6,7 +6,7 @@
 #    By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/21 17:06:37 by ldummer-          #+#    #+#              #
-#    Updated: 2025/06/11 10:01:02 by ldummer-         ###   ########.fr        #
+#    Updated: 2025/06/11 11:26:23 by ldummer-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -106,13 +106,13 @@ $(LIBFT_LIB) : $(LIBFT_DIR)
 $(MLX):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		echo "Getting minilibx for Linux"; \
-		git clone https://github.com/42Paris/minilibx-linux.git > /dev/null 2>&1; \
+		curl -O https://cdn.intra.42.fr/document/document/32345/minilibx-linux.tgz && \
 		tar -xzf minilibx-linux.tgz && \
-		rm -f minilibx-linux.tgz && \
-		mv minilibx-linux $(MLX_DIR); \
+		rm -f minilibx-linux.tgz; \
 	fi
 	@$(MAKE) -C $(MLX_DIR) --silent
 
+# https://github.com/42Paris/minilibx-linux.git
 # https://cdn.intra.42.fr/document/document/32345/minilibx-linux.tgz
 #$(MLX):
 #	@if [ ! -d "$(MLX_DIR)" ]; then \

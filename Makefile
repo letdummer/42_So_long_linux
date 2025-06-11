@@ -6,7 +6,7 @@
 #    By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/21 17:06:37 by ldummer-          #+#    #+#              #
-#    Updated: 2025/06/11 11:26:23 by ldummer-         ###   ########.fr        #
+#    Updated: 2025/06/11 13:31:24 by ldummer-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC_FILES	=	cleaning.c			\
 				so_long.c			\
 				update_images.c		\
 				validate_map.c		\
+				validate_map_path.c		\
 				
 SRC			= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 #OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

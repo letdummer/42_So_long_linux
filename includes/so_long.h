@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 17:17:23 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/11 09:32:05 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/11 14:07:22 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ void	ft_error_message(char *message);
 void	gnl_clear(int fd);
 void	ft_free_images(t_game *game);
 int		handle_close(t_game *game);
+void	ft_free_temp_map(char **temp_map, int height);
 
 // INIT_MAP.C
 void	ft_get_map_dimensions(t_game *game, char *map_path);
@@ -181,5 +182,14 @@ void	*ft_player_images(t_game *game);
 void	ft_validate_map_extension(char *file);
 void	ft_validate_map_content(t_game *game);
 void	ft_check_line_content(char *str, int y, t_game *game);
+void	ft_check_exit(t_game *game);
+void	ft_find_exit_position(t_game *game, int *exit_x, int *exit_y);
+
+// VALIDATE_MAP_PATH.C
+void	ft_validate_map_path(t_game *game);
+char	**ft_create_temp_map(t_game *game);
+void	ft_flood_fill(char **map, int x, int y, int *collectibles, int *exit_found);
+void	ft_validate_map_walls(t_game *game);
+void	ft_check_collectibles_surroundings(t_game *game);
 
 #endif

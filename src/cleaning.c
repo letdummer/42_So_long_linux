@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:11:09 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/09 14:26:17 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/11 14:05:55 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,17 @@ int	handle_close(t_game *game)
 	free(game);
 	exit(0);
 	return (0);
+}
+
+void ft_free_temp_map(char **temp_map, int height)
+{
+	int i;
+	
+	i = 0;
+	while (i < height)
+	{
+		free(temp_map[i]);
+		i++;
+	}
+	free(temp_map);
 }

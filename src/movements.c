@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 18:45:10 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/10 21:53:09 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/11 13:59:28 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_update_player_pos(t_game *game, int new_x, int new_y)
 	ft_update_grid(game, new_x, new_y);
 	game->img.step_count++;
 	game->moves++;
+	ft_printf("Moves: %d\n", game->moves);
 	ft_render_hud(game);
 }
 

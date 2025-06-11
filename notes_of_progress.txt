@@ -1,0 +1,42 @@
+PROCESSO ATUAL
+
+-> verifica nº de argumentos
+	->> (!= 2): imprime Error
+	->> imprime msg de uso correto
+
+-> valida extensão do mapa
+	->> se é '.ber'
+
+-> inicializa a memoria das variaseis à zero com calloc
+	->> todas estruturas estao integradas na estrutura principal t_game
+
+-> lê o mapa
+	->> verifica a largura do mapa (se todas linhas possuem a mesma largura) // TESTAR
+	->> verifica se tem pelo menos 3 linhas						// TESTAR
+	->> aloca memoria para fazer uma cópia do mapa
+	->> preenche o array do mapa
+	
+	->> lê o mapa novamente e contabiliza player, exits, coletaveis
+	->> verifica se há mais de um exit/player
+	->> verifica se há caracteres que não os esperados
+	->> atualiza a posicao (x, y) INICIAL do player
+
+
+
+
+
+####################################################
+
+			NOTAS
+
+-> Nas mensagens de qual tecla foi apertada, colocar o simbolo ou o nome
+	exemplo: up/down ou o simbolo de seta p/ cima/baixo
+
+
+-> IMPLEMENTAR
+	->> contagem de movimentos atual, realtime
+	->> verificacao de se há pelo menos 1 coletavel !!!
+
+	->> verificacao do mapa ser contornado por paredes
+		->> se o primeiro e ultimo caracter da linha sao o numero 1
+		->> se a primeira e ultima linha sao o numero 1

@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 17:17:23 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 20:01:44 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/16 23:58:29 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void	ft_find_exit_position(t_game *game, int *exit_x, int *exit_y);
 // VALIDATE_MAP_PATH.C
 void	ft_validate_map_path(t_game *game);
 char	**ft_create_temp_map(t_game *game);
-void	ft_flood_fill(t_game *game, char **map, int x, int y, int *collectibles, int *exit_found);
+void	ft_flood_fill(char **map, int x, int y, int *collectibles, int *exit_found);
 void	ft_flood_fill_check(t_game *game);
 void	ft_validate_map_borders(t_game *game);
 

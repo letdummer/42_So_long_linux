@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:28:10 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 20:01:28 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/16 23:57:40 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	ft_validate_map_path(t_game *game)
 {
-	char **temp_map;
-	int collectibles;
-	int exit_found;
-	
+	char	**temp_map;
+	int		collectibles;
+	int		exit_found;
+
 	//ft_check_collectibles_surroundings(game);	
 	temp_map = ft_create_temp_map(game);
 	collectibles = 0;
 	exit_found = 0;
-	ft_flood_fill(game, temp_map, game->map.player_pos_x, 
+	ft_flood_fill(temp_map, game->map.player_pos_x,
 		game->map.player_pos_y, &collectibles, &exit_found);
 	// Verifica se todos os coletáveis são acessíveis
 	if (collectibles != game->map.collectibles)
@@ -41,12 +41,12 @@ void	ft_validate_map_path(t_game *game)
 
 char	**ft_create_temp_map(t_game *game)
 {
-	char **temp_map;
-	int i;
-	
+	char	**temp_map;
+	int		i;
+
 	temp_map = (char **)malloc(sizeof(char *) * game->map.height);
 	if (!temp_map)
-		ft_error_message("Memory allocation failed");	
+		ft_error_message("Memory allocation failed");
 	i = 0;
 	while (i < game->map.height)
 	{
@@ -60,7 +60,6 @@ char	**ft_create_temp_map(t_game *game)
 	}
 	return (temp_map);
 }
-
 
 /*
 void	ft_validate_map_walls(t_game *game)

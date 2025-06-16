@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:27:28 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/11 09:25:46 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:09:07 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ int	main(int ac, char **av)
 	ft_map_images(game);
 	ft_render_hud(game);
 	mlx_key_hook(game->mlx_wind, handle_input, game);
-	//mlx_hook(game->mlx_wind, 17, 0, handle_close, game);
-	mlx_hook(game->mlx_wind, 33, 1L<<17, handle_close, game); // Linux
+	mlx_hook(game->mlx_wind, 33, 1L << 17, handle_close, game);
 	mlx_loop(game->mlx_connect);
 	return (0);
 }

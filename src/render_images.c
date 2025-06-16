@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:27:22 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/10 18:12:15 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/16 19:54:33 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,17 @@ void	ft_map_images(t_game *game)
 		while (++x < game->map.width)
 		{
 			mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-				game->img.floor, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+				game->img.floor, x * TILE_SIZE, y * TILE_SIZE);
 			if (game->map.grid[y][x] == MAP_WALL)
 				ft_render_wall(game, x, y);
 			else if (game->map.grid[y][x] == MAP_COLLECT)
 				mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-					game->img.collect, x * TILE_SIZE, (y * TILE_SIZE)
-					+ HUD_HEIGHT);
+					game->img.collect, x * TILE_SIZE, y * TILE_SIZE);
 			else if (game->map.grid[y][x] == MAP_EXIT)
 				render_exit(game, x, y);
 			else if (game->map.grid[y][x] == MAP_PLAYER)
 				mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-					ft_player_images(game), x * TILE_SIZE, (y * TILE_SIZE)
-					+ HUD_HEIGHT);
+					ft_player_images(game), x * TILE_SIZE, y * TILE_SIZE);
 		}
 	}
 }
@@ -52,7 +50,7 @@ void	ft_render_wall(t_game *game, int x, int y)
 	if (temp_wall)
 	{
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			temp_wall, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+			temp_wall, x * TILE_SIZE, y * TILE_SIZE);
 		mlx_destroy_image(game->mlx_connect, temp_wall);
 	}
 }
@@ -66,12 +64,12 @@ void	render_exit(t_game *game, int x, int y)
 		exit_open = mlx_xpm_file_to_image(game->mlx_connect, EXIT_OPEN,
 				&game->img.width, &game->img.height);
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			exit_open, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+			exit_open, x * TILE_SIZE, y * TILE_SIZE);
 		mlx_destroy_image(game->mlx_connect, exit_open);
 	}
 	else
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			game->img.exit, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+			game->img.exit, x * TILE_SIZE, y * TILE_SIZE);
 }
 
 void	ft_render_images(t_game *game)

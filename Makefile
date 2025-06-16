@@ -6,7 +6,7 @@
 #    By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/21 17:06:37 by ldummer-          #+#    #+#              #
-#    Updated: 2025/06/11 13:31:24 by ldummer-         ###   ########.fr        #
+#    Updated: 2025/06/16 19:47:34 by ldummer-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,26 +79,31 @@ endif
 #								BASE		 		  						   #
 #------------------------------------------------------------------------------#
 
-all: deps $(NAME)
+all: $(NAME) deps
 
 $(NAME): $(MLX) $(OBJ) $(LIBFT_LIB)
-	@make -C $(MLX_DIR) > /dev/null 2>&1
-	$(call success, "All files have been compiled ✅")
-	$(call text, "Creating library $(NAME) [...]")
-	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -o $(NAME)
-	@clear
-	$(call success, "Build complete: $(NAME) 📚 ✨")       
+#	@make -C $(MLX_DIR) > /dev/null 2>&1
+#	$(call success, "All files have been compiled ✅")
+#	$(call text, "Creating library $(NAME) [...]")
+#	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -o $(NAME)
+#	@clear
+#	$(call success, "Build complete: $(NAME) 📚 ✨")       
+	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)
+	$(call success, "Build complete: $(NAME) 📚 ✨")
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@mkdir -p $(OBJ_DIR)
 	$(call warn, "Compiling [...] $<")
 	@$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
-$(LIBFT_LIB) : $(LIBFT_DIR)
-	$(call text, "COMPILING LIBFT")
-	@make -C $(LIBFT_DIR) all --silent
-	@make -C $(LIBFT_DIR) bonus --silent
-	@make -C $(LIBFT_DIR) extra --silent
+$(LIBFT_LIB) :
+#	$(call text, "COMPILING LIBFT")
+#	@make -C $(LIBFT_DIR) all --silent
+#	@make -C $(LIBFT_DIR) bonus --silent
+#	@make -C $(LIBFT_DIR) extra --silent
+	@if [ ! -f "$(LIBFT_LIB)" ]; then \
+		$(MAKE) -C $(LIBFT_DIR) all bonus extra; \
+	fi
 
 #$(FT_PRINTF_LIB) : $(FT_PRINTF_DIR)
 #	$(call text, "COMPILING FT_PRINTF")
@@ -111,7 +116,10 @@ $(MLX):
 		tar -xzf minilibx-linux.tgz && \
 		rm -f minilibx-linux.tgz; \
 	fi
-	@$(MAKE) -C $(MLX_DIR) --silent
+#	@$(MAKE) -C $(MLX_DIR) --silent
+	@if [ ! -f "$(MLX)" ]; then \
+		$(MAKE) -C $(MLX_DIR); \
+	fi
 
 # https://github.com/42Paris/minilibx-linux.git
 # https://cdn.intra.42.fr/document/document/32345/minilibx-linux.tgz
@@ -126,8 +134,15 @@ $(MLX):
 #	@$(MAKE) -C $(MLX_DIR) > /dev/null 2>&1
 
 deps: get_libft
-	@make -C $(LIBFT_DIR) extra --silent
-	@echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"
+#	@make -C $(LIBFT_DIR) extra --silent
+#	@echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"
+	@if [ -d "$(LIBFT_DIR)" ]; then \
+		$(MAKE) -C $(LIBFT_DIR) all bonus extra; \
+		echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"; \
+	else \
+		echo "Error: Libft directory not found after attempting to download"; \
+		exit 1; \
+	fi
 
 get_libft:
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
@@ -238,4 +253,8 @@ highligth_bold = @echo "$(CYAN_BOLD)$(1)$(RESET)"
 
 
 #______________________________________________________________________________#
-.PHONY: all clean fclean re help manual valgrind gdb deps
+.PHONY: all clean fclean re help manual valgrind gdb deps libft
+
+libft: $(LIBFT_LIB)
+
+deps: get_libft libft

@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:14:10 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/09 14:26:17 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/16 19:52:53 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_init_wind(t_game *game)
 	int	window_height;
 
 	window_width = game->map.width * TILE_SIZE;
-	window_height = (game->map.height * TILE_SIZE) + HUD_HEIGHT;
+	window_height = game->map.height * TILE_SIZE;
 	if (window_width > WIND_WIDTH)
 		ft_error_message("Map is too wide. Maximum width is 30 tiles.");
 	if (window_height > WIND_HEIGHT)
@@ -52,6 +52,7 @@ int	handle_input(int key, t_game *game)
 	return (0);
 }
 
+/* 
 void	ft_render_hud(t_game *game)
 {
 	int		x;
@@ -79,4 +80,4 @@ void	ft_render_hud(t_game *game)
 		10, 40, TEXT_COLOR, collectibles);
 	free(moves);
 	free(collectibles);
-}
+} */

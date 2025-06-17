@@ -6,7 +6,7 @@
 #    By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/21 17:06:37 by ldummer-          #+#    #+#              #
-#    Updated: 2025/06/16 19:47:34 by ldummer-         ###   ########.fr        #
+#    Updated: 2025/06/17 17:09:25 by ldummer-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ INCLUDES	= includes
 HEADERS = $(INCLUDES)/so_long.h
 
 SRC_FILES	=	cleaning.c			\
+				flood_fill.c		\
 				init_map.c			\
 				init_window.c		\
 				movements.c			\
@@ -40,20 +41,12 @@ SRC			= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ			= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 #	Librarys
-
 LIBFT_DIR	= libft
 LIBFT_LIB	= $(LIBFT_DIR)/libft.a
-
-#FT_PRINTF_DIR	= libft/ft_printf
-#FT_PRINTF_LIB	= $(FT_PRINTF_DIR)/libftprintf.a
 
 MLX_DIR		= minilibx-linux
 MLX			= $(MLX_DIR)/libmlx.a
 MLXFLAGS	= -L$(MLX_DIR) -lmlx -lXext -lX11
-
-#MLX_DIR		= minilibx_opengl_20191021
-#MLX			= $(MLX_DIR)/libmlx.a
-#MLX_FLAGS	= -framework OpenGL -framework AppKit -L$(MLX_DIR) -lmlx
 
 #------------------------------------------------------------------------------#
 #								COMPILATION 		  						   #
@@ -63,7 +56,6 @@ CC		= cc
 CFLAGS	= -g -Wall -Wextra -Werror
 DFLAGS	= -g
 RM= rm -f
-
 
 ifeq ($(UNAME_S),Linux)
 	CFLAGS += -I/usr/include/X11
@@ -79,16 +71,16 @@ endif
 #								BASE		 		  						   #
 #------------------------------------------------------------------------------#
 
-all: $(NAME) deps
+all: deps $(NAME) 
 
 $(NAME): $(MLX) $(OBJ) $(LIBFT_LIB)
 #	@make -C $(MLX_DIR) > /dev/null 2>&1
 #	$(call success, "All files have been compiled ✅")
 #	$(call text, "Creating library $(NAME) [...]")
-#	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -o $(NAME)
+	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -o $(NAME)
 #	@clear
 #	$(call success, "Build complete: $(NAME) 📚 ✨")       
-	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)
+#	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)
 	$(call success, "Build complete: $(NAME) 📚 ✨")
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
@@ -102,7 +94,7 @@ $(LIBFT_LIB) :
 #	@make -C $(LIBFT_DIR) bonus --silent
 #	@make -C $(LIBFT_DIR) extra --silent
 	@if [ ! -f "$(LIBFT_LIB)" ]; then \
-		$(MAKE) -C $(LIBFT_DIR) all bonus extra; \
+		$(MAKE) -C $(LIBFT_DIR) all bonus extra --silent; \
 	fi
 
 #$(FT_PRINTF_LIB) : $(FT_PRINTF_DIR)
@@ -137,7 +129,7 @@ deps: get_libft
 #	@make -C $(LIBFT_DIR) extra --silent
 #	@echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"
 	@if [ -d "$(LIBFT_DIR)" ]; then \
-		$(MAKE) -C $(LIBFT_DIR) all bonus extra; \
+		$(MAKE) -C $(LIBFT_DIR) all bonus extra --silent > /dev/null; \
 		echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"; \
 	else \
 		echo "Error: Libft directory not found after attempting to download"; \
@@ -161,7 +153,7 @@ get_libft:
 clean:
 	$(call text, "Removing object files [...]")
 	@$(RM) $(OBJ)
-	@make -C $(LIBFT_DIR) clean
+	@make -C $(LIBFT_DIR) clean --silent
 #	@make -C $(FT_PRINTF_DIR) clean
 #	@rm -rf $(MLX_DIR)
 	$(call success, "		Object files cleaned. 💣"); \
@@ -195,7 +187,7 @@ valgrind: $(NAME)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFTLIB) -o $(NAME)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(INPUT)
 	make clean
-	./push_swap $(INPUT)
+	./so_long $(INPUT)
 
 #------------------------------------------------------------------------------#
 #								MANUAL		 		  						   #

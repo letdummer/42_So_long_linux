@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 18:12:47 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/10 18:12:48 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/17 17:05:32 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,18 @@
 
 void	ft_update_grid(t_game *game, int x, int y)
 {
-	mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-		game->img.floor, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+	mlx_put_image_to_window(game->mlx_connect, game->mlx_wind, game->img.floor,
+		x * TILE_SIZE, y * TILE_SIZE);
 	if (game->map.grid[y][x] == MAP_WALL)
 		ft_update_wall(game, x, y);
 	else if (game->map.grid[y][x] == MAP_COLLECT)
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			game->img.collect, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+			game->img.collect, x * TILE_SIZE, y * TILE_SIZE);
 	else if (game->map.grid[y][x] == MAP_EXIT)
 		ft_update_exit(game, x, y);
 	else if (game->map.grid[y][x] == MAP_PLAYER)
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			ft_player_images(game), x * TILE_SIZE, (y * TILE_SIZE)
-			+ HUD_HEIGHT);
+			ft_player_images(game), x * TILE_SIZE, y * TILE_SIZE);
 }
 
 void	ft_update_exit(t_game *game, int x, int y)
@@ -37,13 +36,16 @@ void	ft_update_exit(t_game *game, int x, int y)
 	{
 		exit_open = mlx_xpm_file_to_image(game->mlx_connect, EXIT_OPEN,
 				&game->img.width, &game->img.height);
-		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			exit_open, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
-		mlx_destroy_image(game->mlx_connect, exit_open);
+		if (exit_open)
+		{
+			mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
+				exit_open, x * TILE_SIZE, y * TILE_SIZE);
+			mlx_destroy_image(game->mlx_connect, exit_open);
+		}
 	}
 	else
 		mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-			game->img.exit, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+			game->img.exit, x * TILE_SIZE, y * TILE_SIZE);
 }
 
 void	ft_update_wall(t_game *game, int x, int y)
@@ -51,10 +53,10 @@ void	ft_update_wall(t_game *game, int x, int y)
 	char	*wall_path;
 
 	wall_path = ft_walls_tiles(game, x, y);
-	game->img.wall = mlx_xpm_file_to_image(game->mlx_connect,
-			wall_path, &game->img.width, &game->img.height);
-	mlx_put_image_to_window(game->mlx_connect, game->mlx_wind,
-		game->img.wall, x * TILE_SIZE, (y * TILE_SIZE) + HUD_HEIGHT);
+	game->img.wall = mlx_xpm_file_to_image(game->mlx_connect, wall_path,
+			&game->img.width, &game->img.height);
+	mlx_put_image_to_window(game->mlx_connect, game->mlx_wind, game->img.wall,
+		x * TILE_SIZE, y * TILE_SIZE);
 	mlx_destroy_image(game->mlx_connect, game->img.wall);
 }
 

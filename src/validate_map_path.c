@@ -6,37 +6,57 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:28:10 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 23:57:40 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:10:55 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../includes/so_long.h"
 
-void	ft_validate_map_path(t_game *game)
+void	ft_validate_map_extension(char *file)
 {
-	char	**temp_map;
-	int		collectibles;
-	int		exit_found;
+	char	*extension;
+	char	*basename;
 
-	//ft_check_collectibles_surroundings(game);	
-	temp_map = ft_create_temp_map(game);
-	collectibles = 0;
-	exit_found = 0;
-	ft_flood_fill(temp_map, game->map.player_pos_x,
-		game->map.player_pos_y, &collectibles, &exit_found);
-	// Verifica se todos os coletáveis são acessíveis
-	if (collectibles != game->map.collectibles)
+	if (!file)
+		ft_error_message(NULL, "Invalid file!");
+	if (file[0] == '.')
 	{
-		ft_free_temp_map(temp_map, game->map.height);
-		ft_error_message("Some collectibles are not reachable!");
+		if (file[1] == '/')
+			file += 2;
+		else
+			ft_error_message(NULL, "It's a hidden file, not a map '.ber'!");
 	}
-	// Verifica se a saída é acessível
-	if (!exit_found)
+	basename = ft_strrchr(file, '/');
+	if (basename)
+		basename++;
+	else
+		basename = file;
+	extension = ft_strrchr(file, '.');
+	if (extension == NULL || ft_strcmp(extension, ".ber") != 0)
+		ft_error_message(NULL, "Invalid file. Must be '.ber'");
+	if (extension == basename)
+		ft_error_message(NULL, "Invalid. It's a hidden file.");
+}
+
+void	ft_validate_map_content(t_game *game)
+{
+	int	y;
+
+	y = 0;
+	while (y < game->map.height)
 	{
-		ft_free_temp_map(temp_map, game->map.height);
-		ft_error_message("Exit is not reachable!");
+		ft_check_line_content(game->map.grid[y], y, game);
+		y++;
 	}
-	ft_free_temp_map(temp_map, game->map.height);
+	if (game->map.exits != 1)
+		ft_error_message(game, "The map must have exactly one exit.");
+	if (game->map.player != 1)
+		ft_error_message(game, "The map must have exactly one player.");
+	if (game->map.collectibles < 1)
+		ft_error_message(game, "The map must have at least one collectible.");
+	ft_validate_map_borders(game);
+	ft_check_surrounded_objects(game);
+	ft_flood_fill_check(game);
 }
 
 char	**ft_create_temp_map(t_game *game)
@@ -46,7 +66,7 @@ char	**ft_create_temp_map(t_game *game)
 
 	temp_map = (char **)malloc(sizeof(char *) * game->map.height);
 	if (!temp_map)
-		ft_error_message("Memory allocation failed");
+		ft_error_message(game, "Memory allocation failed");
 	i = 0;
 	while (i < game->map.height)
 	{
@@ -54,34 +74,37 @@ char	**ft_create_temp_map(t_game *game)
 		if (!temp_map[i])
 		{
 			ft_free_temp_map(temp_map, i);
-			ft_error_message("Memory allocation failed");
+			ft_error_message(game, "Memory allocation failed");
 		}
 		i++;
 	}
 	return (temp_map);
 }
 
-/*
-void	ft_validate_map_walls(t_game *game)
+void	ft_validate_map_borders(t_game *game)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	y = 0;
 	while (y < game->map.height)
 	{
-		x = 0;
-		while (x < game->map.width)
+		if (y == 0 || y == game->map.height - 1)
 		{
-			if (y == 0 || y == game->map.height - 1
-				|| x == 0 || x == game->map.width - 1)
+			x = 0;
+			while (x < game->map.width)
 			{
 				if (game->map.grid[y][x] != MAP_WALL)
-					ft_error_message("Map must be surrounded by walls!");
+					ft_error_message(game, "Map must be surrounded by walls!");
+				x++;
 			}
-			x++;
+		}
+		else
+		{
+			if (game->map.grid[y][0] != MAP_WALL
+				|| game->map.grid[y][game->map.width - 1] != MAP_WALL)
+				ft_error_message(game, "Map must be surrounded by walls!");
 		}
 		y++;
 	}
 }
- */

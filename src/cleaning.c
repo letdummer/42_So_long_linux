@@ -6,16 +6,17 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 14:11:09 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 20:07:13 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:54:53 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../includes/so_long.h"
 
-void	ft_error_message(char *message)
+void	ft_error_message(t_game *game, char *message)
 {
 	ft_printf("Error\n%s\n", message);
-	exit(1);
+	if (game)
+		handle_close(game);
 }
 
 void	gnl_clear(int fd)
@@ -68,7 +69,10 @@ int	handle_close(t_game *game)
 		exit (0);
 	ft_free_images(game);
 	if (game->mlx_wind && game->mlx_connect)
+	{
 		mlx_destroy_window(game->mlx_connect, game->mlx_wind);
+		mlx_destroy_display(game->mlx_connect);
+	}
 	if (game->map.grid)
 	{
 		i = 0;
@@ -84,15 +88,16 @@ int	handle_close(t_game *game)
 		free(game->mlx_connect);
 	free(game);
 	exit(0);
-	return (0);
 }
 
 void	ft_free_temp_map(char **temp_map, int height)
 {
 	int	i;
 
+	if (!temp_map)
+		return ;
 	i = 0;
-	while (i < height)
+	while (i < height && temp_map[i])
 	{
 		free(temp_map[i]);
 		i++;

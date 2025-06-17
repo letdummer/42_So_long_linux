@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 17:17:23 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 23:58:29 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:49:15 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,15 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/stat.h> 
+# include <X11/keysym.h>	
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft/libft.h"
 # include "../libft/ft_printf/libftprintf.h"
 # include "../libft/get_next_line/get_next_line.h"
 
-#include <X11/keysym.h>				//descomentar para usar no linux
-//# include <Carbon/Carbon.h>			// Include for event handling on macOS
-
 # define TILE_SIZE 64
 # define WIND_WIDTH 1920
 # define WIND_HEIGHT 1080
-# define HUD_HEIGHT 64
-# define HUD_COLOR 0x282828
-# define TEXT_COLOR 0xFFFFFF
 
 // COLORS
 # define RED "\033[0;91m"
@@ -48,8 +43,6 @@
 # define KEY_LEFT  			65361
 # define KEY_RIGHT 			65363
 # define KEY_DOWN  			65364
-
-//# define KEY_Q				113
 
 // map element definition
 # define MAP_WALL		'1'
@@ -134,23 +127,28 @@ typedef struct s_game
 }	t_game;
 
 // CLEANING.C
-void	ft_error_message(char *message);
+void	ft_error_message(t_game *game, char *message);
 void	gnl_clear(int fd);
 void	ft_free_images(t_game *game);
 int		handle_close(t_game *game);
 void	ft_free_temp_map(char **temp_map, int height);
 
+// FLOOD_FILL.C
+void	ft_flood_fill_check(t_game *game);
+void	ft_flood_fill_check(t_game *game);
+int		ft_check_collectibles_path(t_game *game, char **map, int x, int y);
+int		ft_check_exit_path(t_game *game, char **map, int x, int y);
+
 // INIT_MAP.C
 void	ft_get_map_dimensions(t_game *game, char *map_path);
-int		ft_count_lines(char *map_path);
+int		ft_count_lines(t_game *game, char *map_path);
 void	ft_allocate_map_memory(t_game *game);
-void	ft_validate_line(char *str, t_game *game, int i);
+void	ft_validate_line(int fd, char *str, t_game *game, int i);
 void	ft_fill_map_content(t_game *game, char *map_path);
 
 // INIT_WINDOW.C
 void	ft_init_wind(t_game *game);
 int		handle_input(int key, t_game *game);
-void	ft_render_hud(t_game *game);
 
 // MOVEMENTS.C
 void	ft_update_player_pos(t_game *game, int new_x, int new_y);
@@ -179,20 +177,16 @@ void	ft_load_player_images(t_game *game);
 void	*ft_player_images(t_game *game);
 
 // VALIDATE_MAP.C
-void	ft_validate_map_extension(char *file);
-void	ft_validate_map_content(t_game *game);
 void	ft_check_line_content(char *str, int y, t_game *game);
 void	ft_check_exit(t_game *game);
 void	ft_find_exit_position(t_game *game, int *exit_x, int *exit_y);
+int		ft_is_surrounded(t_game *game, int x, int y);
+void	ft_check_surrounded_objects(t_game *game);
 
 // VALIDATE_MAP_PATH.C
-void	ft_validate_map_path(t_game *game);
+void	ft_validate_map_extension(char *file);
+void	ft_validate_map_content(t_game *game);
 char	**ft_create_temp_map(t_game *game);
-void	ft_flood_fill(char **map, int x, int y, int *collectibles, int *exit_found);
-void	ft_flood_fill_check(t_game *game);
 void	ft_validate_map_borders(t_game *game);
-
-//void	ft_validate_map_walls(t_game *game);
-//void	ft_check_collectibles_surroundings(t_game *game);
 
 #endif

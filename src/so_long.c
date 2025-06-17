@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 21:27:28 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/16 20:09:07 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:51:45 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,19 @@ int	main(int ac, char **av)
 
 	map_path = av[1];
 	if (ac != 2)
-		ft_error_message("Usage: ./so_long ./maps/map.ber");
+	{
+		ft_printf("Error\n");
+		ft_printf("Usage: ./so_long ./maps/map.ber\n");
+		return (1);
+	}
 	ft_validate_map_extension(map_path);
 	game = ft_init_game();
 	if (!game)
-		ft_error_message("Failed to initialize game.");
+		ft_error_message(NULL, "Failed to initialize game.");
 	ft_map_init(game, map_path);
 	ft_init_wind(game);
 	ft_render_images(game);
 	ft_map_images(game);
-	ft_render_hud(game);
 	mlx_key_hook(game->mlx_wind, handle_input, game);
 	mlx_hook(game->mlx_wind, 33, 1L << 17, handle_close, game);
 	mlx_loop(game->mlx_connect);

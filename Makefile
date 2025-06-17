@@ -6,15 +6,12 @@
 #    By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/21 17:06:37 by ldummer-          #+#    #+#              #
-#    Updated: 2025/06/17 17:09:25 by ldummer-         ###   ########.fr        #
+#    Updated: 2025/06/17 17:26:15 by ldummer-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME= so_long
-
-# Detect the OS
-UNAME_S := $(shell uname -s)
 
 #------------------------------------------------------------------------------#
 #									FILES  				     				   #
@@ -37,7 +34,6 @@ SRC_FILES	=	cleaning.c			\
 				validate_map_path.c		\
 				
 SRC			= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
-#OBJ			= $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 OBJ			= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 #	Librarys
@@ -74,13 +70,7 @@ endif
 all: deps $(NAME) 
 
 $(NAME): $(MLX) $(OBJ) $(LIBFT_LIB)
-#	@make -C $(MLX_DIR) > /dev/null 2>&1
-#	$(call success, "All files have been compiled ✅")
-#	$(call text, "Creating library $(NAME) [...]")
 	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -o $(NAME)
-#	@clear
-#	$(call success, "Build complete: $(NAME) 📚 ✨")       
-#	@$(CC) $(CFLAGS) -I$(INCLUDES) $(OBJ) -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)
 	$(call success, "Build complete: $(NAME) 📚 ✨")
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
@@ -89,17 +79,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 $(LIBFT_LIB) :
-#	$(call text, "COMPILING LIBFT")
-#	@make -C $(LIBFT_DIR) all --silent
-#	@make -C $(LIBFT_DIR) bonus --silent
-#	@make -C $(LIBFT_DIR) extra --silent
 	@if [ ! -f "$(LIBFT_LIB)" ]; then \
 		$(MAKE) -C $(LIBFT_DIR) all bonus extra --silent; \
 	fi
-
-#$(FT_PRINTF_LIB) : $(FT_PRINTF_DIR)
-#	$(call text, "COMPILING FT_PRINTF")
-#	@make -C $(FT_PRINTF_DIR) --silent
 
 $(MLX):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
@@ -108,26 +90,11 @@ $(MLX):
 		tar -xzf minilibx-linux.tgz && \
 		rm -f minilibx-linux.tgz; \
 	fi
-#	@$(MAKE) -C $(MLX_DIR) --silent
 	@if [ ! -f "$(MLX)" ]; then \
 		$(MAKE) -C $(MLX_DIR); \
 	fi
 
-# https://github.com/42Paris/minilibx-linux.git
-# https://cdn.intra.42.fr/document/document/32345/minilibx-linux.tgz
-#$(MLX):
-#	@if [ ! -d "$(MLX_DIR)" ]; then \
-#		echo "Getting minilibx for macOS"; \
-#		curl -O https://cdn.intra.42.fr/document/document/20826/minilibx_opengl.tgz && \
-#		tar -xzf minilibx_opengl.tgz && \
-#		rm -f minilibx_opengl.tgz && \
-#		mv minilibx_opengl_20191021 $(MLX_DIR); \
-#	fi
-#	@$(MAKE) -C $(MLX_DIR) > /dev/null 2>&1
-
 deps: get_libft
-#	@make -C $(LIBFT_DIR) extra --silent
-#	@echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"
 	@if [ -d "$(LIBFT_DIR)" ]; then \
 		$(MAKE) -C $(LIBFT_DIR) all bonus extra --silent > /dev/null; \
 		echo "[$(GREEN_BOLD)All deps installed!$(RESET)]"; \
@@ -154,8 +121,6 @@ clean:
 	$(call text, "Removing object files [...]")
 	@$(RM) $(OBJ)
 	@make -C $(LIBFT_DIR) clean --silent
-#	@make -C $(FT_PRINTF_DIR) clean
-#	@rm -rf $(MLX_DIR)
 	$(call success, "		Object files cleaned. 💣"); \
 
 # clean the .o objects, the objs folder and the project file
@@ -163,9 +128,6 @@ fclean: clean
 	$(call text, "Removing files [...]")
 	@$(RM) $(NAME)
 	@$(MAKE) --silent -C $(LIBFT_DIR) fclean
-#	@$(MAKE) --silent -C $(FT_PRINTF_DIR) fclean
-#	@rm -rf $(lIBFT_DIR)
-#	@rm -rf $(MLX_DIR)
 	$(call highligth_bold, "FULL CLEANING DONE! ✅")
 
 #	refresh the project
@@ -188,16 +150,6 @@ valgrind: $(NAME)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(INPUT)
 	make clean
 	./so_long $(INPUT)
-
-#------------------------------------------------------------------------------#
-#								MANUAL		 		  						   #
-#------------------------------------------------------------------------------#
-
-#manual:
-#	@echo "$(CYAN_BOLD)\n\t\tFT_PRINTF MANUAL$(RESET)"
-#	@echo "$(CYAN_BOLD)\t---------------------------------$(RESET)"
-#	@echo "$(CYAN_BOLD)\t%c$(RESET)	$(CYAN)Print a single character.$(RESET)"
-#	@echo "$(CYAN_BOLD)\t%s$(RESET)	$(CYAN)Print a string.$(RESET)"
 
 	
 #------------------------------------------------------------------------------#

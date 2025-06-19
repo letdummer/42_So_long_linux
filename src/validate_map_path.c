@@ -6,7 +6,7 @@
 /*   By: ldummer- <ldummer-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:28:10 by ldummer-          #+#    #+#             */
-/*   Updated: 2025/06/17 17:29:02 by ldummer-         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:53:41 by ldummer-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_validate_map_extension(char *file)
 	{
 		ft_error_message(NULL, "Invalid file. Must be '.ber'");
 		exit(1);
-	}	
+	}
 	if (extension == basename)
 		ft_error_message(NULL, "Invalid. It's a hidden file.");
 }

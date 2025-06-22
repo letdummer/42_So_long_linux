@@ -1,0 +1,291 @@
+AVALIACAO => SO_LONG
+
+	estrutura
+
+Player
+coletaveis
+exit
+walls
+floor
+
+	bibliotecas
+Minilibx => biblioteca grafica simples para criar janelas e renderizar imagens
+libft => biblioteca com funcoes utilitarias basicas
+x11 =>biblioteca para gerenciamento de janelas em sistemas linux
+
+	Tratamento de Erros
+- Arquivo invalido
+- mapas mal formatados
+- problemas de memoria
+- erros de inicializacao grafica
+
+
+___________ Como o jogo funciona __________________
+
+[1] Leitura do Mapa
+
+Cada caractere representa um elemento:
+'1' para paredes
+'0' para espaços vazios
+'C' para coletáveis
+'E' para saída
+'P' para posição inicial do jogador
+
+[2] Validacao do Mapa
+- Se é retangular
+- Se está cercado por paredes
+- Se há exatamente:
+	- 1 jogador
+	- 1 saida
+	- pelo menos 1 coletavel
+- Se todos os itens sao alcançaveis
+
+[3] Interface grafica
+- Usa Minilibx para criar uma janela
+- Carrega imagens para cada elemento do jogo com put_image_to_window (falar sobre diferença entre mlx _put_pixel)
+- Renderiza o mapa na tela utilizando as imagens correspondentes
+
+[4] Movimentacao do jogador
+- Comandos do teclado (setas e/ou WASD)
+- Verifica colisoes com paredes
+- Atualiza a contagem de itens coletados
+- Permite acessar a saida apenas quando todos os itens foram coletados
+
+[5] Sistema de animacao
+- diferentes imagens para cada movimento do jogador
+- saida muda de aparencia quando tudo foi coletado 
+
+
+
+
+
+
+__________ FUNCOES _______________
+
+Arquivo: cleaning.c
+ft_error_message
+Exibe uma mensagem de erro no terminal. Se um ponteiro para o jogo for passado, encerra o jogo corretamente liberando recursos.
+
+gnl_clear
+Lê e descarta todas as linhas restantes de um arquivo aberto, liberando a memória de cada linha.
+
+ft_free_images
+Libera todas as imagens carregadas na memória pela MinilibX, evitando vazamentos de memória.
+
+handle_close
+Fecha o jogo, libera todos os recursos (imagens, janela, mapa, conexão com a MinilibX) e encerra o programa.
+
+ft_free_temp_map
+Libera a memória de um mapa temporário (usado, por exemplo, no flood fill).
+
+Arquivo: flood_fill.c
+ft_flood_fill_check
+Verifica se todos os colecionáveis e a saída são acessíveis a partir da posição do jogador usando o algoritmo flood fill.
+Cria mapas temporários para testar caminhos até os colecionáveis e até a saída.
+
+ft_check_collectibles_path
+Função recursiva que percorre o mapa a partir da posição do jogador, contando quantos colecionáveis podem ser alcançados.
+
+ft_check_exit_path
+Função recursiva que verifica se é possível chegar até a saída a partir da posição do jogador.
+
+Arquivo: init_map.c
+ft_get_map_dimensions
+Lê o arquivo do mapa para determinar sua largura e altura.
+
+ft_count_lines
+Conta o número de linhas (altura) do mapa.
+
+ft_allocate_map_memory
+Aloca memória para armazenar o mapa na estrutura do jogo.
+
+ft_validate_line
+Verifica se cada linha do mapa tem o tamanho correto (retangularidade).
+
+ft_fill_map_content
+Lê o conteúdo do arquivo do mapa e preenche a matriz do mapa na estrutura do jogo, validando cada linha.
+
+Arquivo: init_window.c
+ft_init_wind
+Inicializa a janela do jogo usando a MinilibX, com tamanho baseado nas dimensões do mapa.
+Verifica se o mapa não excede os limites máximos de largura e altura.
+
+handle_input
+Função de callback para eventos de teclado. Fecha o jogo ao pressionar ESC ou move o jogador ao pressionar WASD/setas.
+
+Arquivo: movements.c
+ft_update_player_pos
+Atualiza a posição do jogador no mapa e na tela, incrementando o contador de movimentos.
+
+ft_move_player
+Calcula a nova posição do jogador com base na tecla pressionada e chama a função de atualização se o movimento for válido.
+
+ft_special_tiles
+Trata casos especiais ao mover o jogador: coleta de itens e chegada à saída.
+
+ft_handle_collectables
+Incrementa o contador de itens coletados e atualiza a saída se todos foram coletados.
+
+ft_validate_move
+Verifica se o movimento é válido (não atravessa paredes ou sai do mapa) e trata casos especiais.
+
+Arquivo: render_images.c
+ft_map_images
+Renderiza todos os elementos do mapa na janela, desenhando cada tile de acordo com o tipo.
+
+ft_render_wall
+Renderiza uma parede específica, escolhendo a imagem correta conforme a posição (canto, borda, centro).
+
+render_exit
+Renderiza a saída, mudando a imagem se todos os colecionáveis foram pegos.
+
+ft_render_images
+Carrega todas as imagens necessárias (chão, parede, colecionável, saída, sprites do jogador).
+
+ft_walls_tiles
+Retorna o caminho da imagem correta para cada tipo de parede (cantos, bordas, centro).
+
+Arquivo: so_long.c
+main
+Função principal: valida argumentos, inicializa o jogo, carrega o mapa, cria a janela, renderiza o mapa e inicia o loop principal.
+
+ft_init_game
+Aloca e inicializa a estrutura principal do jogo, zerando todos os campos.
+
+ft_map_init
+Inicializa o mapa: zera contadores, lê dimensões, aloca memória, preenche e valida o conteúdo.
+
+ft_win
+Exibe mensagem de vitória, espera um segundo e fecha o jogo.
+
+Arquivo: update_images.c
+ft_update_grid
+Atualiza a imagem de um tile específico na tela, desenhando o elemento correto.
+
+ft_update_exit
+Atualiza a imagem da saída, mostrando a versão aberta se todos os colecionáveis foram pegos.
+
+ft_update_wall
+Atualiza a imagem de uma parede específica.
+
+ft_load_player_images
+Carrega todas as imagens (sprites) do jogador para diferentes direções e animações.
+
+ft_player_images
+Retorna o sprite correto do jogador de acordo com a direção e o passo atual (para animação).
+
+Arquivo: validate_map.c
+ft_check_line_content
+Conta e valida os elementos de cada linha do mapa (jogador, saída, colecionáveis, caracteres inválidos).
+
+ft_check_exit
+Verifica se a saída não está completamente cercada por paredes.
+
+ft_find_exit_position
+Encontra a posição da saída no mapa.
+
+ft_check_surrounded_objects
+Verifica se o jogador, colecionáveis ou saída estão completamente cercados por paredes.
+
+ft_is_surrounded
+Função auxiliar que verifica se uma posição está cercada por paredes.
+
+Arquivo: validate_map_path.c
+ft_validate_map_extension
+Verifica se o arquivo do mapa tem a extensão .ber e não é um arquivo oculto.
+
+ft_validate_map_content
+Valida o conteúdo do mapa: quantidade de jogadores, saídas, colecionáveis, bordas, objetos cercados e acessibilidade.
+
+ft_create_temp_map
+Cria uma cópia temporária do mapa para ser usada em validações (como flood fill).
+
+ft_validate_map_borders
+Verifica se o mapa está completamente cercado por paredes.
+
+
+____________ FLUXO DO PROGRAMA _________________
+
+1. Início do Programa
+
+O programa começa na função main (em so_long.c).
+main:
+Valida os argumentos recebidos (nome do mapa).
+Chama ft_init_game para criar e inicializar a estrutura principal do jogo (t_game).
+Chama ft_map_init para carregar e validar o mapa.
+
+2. Leitura e Validação do Mapa
+
+ft_map_init:
+
+Zera os contadores do mapa.
+Chama ft_get_map_dimensions para descobrir largura e altura do mapa.
+Chama ft_allocate_map_memory para alocar memória para o mapa.
+Chama ft_fill_map_content para ler o arquivo e preencher a matriz do mapa.
+Chama ft_validate_map_content para validar o conteúdo do mapa.
+ft_validate_map_content (em validate_map_path.c):
+
+Chama funções auxiliares para:
+Verificar extensão do arquivo (ft_validate_map_extension).
+Validar bordas do mapa (ft_validate_map_borders).
+Validar quantidade de jogadores, saídas e colecionáveis.
+Verificar se objetos importantes não estão cercados por paredes (ft_check_surrounded_objects).
+Verificar acessibilidade dos itens e saída usando flood fill (ft_flood_fill_check).
+
+3. Inicialização da Janela e Imagens
+
+ft_init_wind (em init_window.c):
+Inicializa a conexão com a MinilibX.
+Cria a janela do jogo com o tamanho adequado.
+Chama ft_render_images para carregar todas as imagens (sprites) necessárias.
+
+4. Renderização Inicial do Mapa
+
+ft_map_images (em render_images.c):
+Percorre toda a matriz do mapa.
+Para cada posição, chama funções para desenhar o elemento correto (chão, parede, colecionável, saída, jogador).
+
+5. Loop Principal e Interação
+
+O programa entra no loop principal da MinilibX, aguardando eventos do usuário.
+
+Quando o usuário pressiona uma tecla:
+
+handle_input (em init_window.c) é chamado.
+Se for ESC, chama handle_close para fechar o jogo.
+Se for uma tecla de movimento, chama ft_move_player.
+ft_move_player (em movements.c):
+
+Calcula a nova posição do jogador.
+Chama ft_validate_move para verificar se o movimento é permitido.
+Se sim, chama ft_update_player_pos para atualizar a posição do jogador.
+Se o jogador pisa em um colecionável, chama ft_handle_collectables.
+Se o jogador chega à saída e já coletou tudo, chama ft_win.
+
+6. Atualização da Tela
+
+Após cada movimento, funções como ft_update_grid, ft_update_exit e ft_update_wall (em update_images.c) atualizam apenas as partes necessárias da tela, tornando o jogo mais eficiente.
+
+7. Finalização
+
+Se o jogador vence (ft_win), uma mensagem é exibida e o jogo é encerrado.
+Se o usuário fecha a janela ou pressiona ESC, handle_close é chamado para liberar todos os recursos e encerrar o programa.
+Resumo Visual do Fluxo
+main
+→ ft_init_game
+→ ft_map_init
+→ ft_init_wind
+→ ft_render_images
+→ ft_map_images
+→ Loop de eventos
+→ handle_input
+→ ft_move_player
+→ ft_validate_move
+→ ft_update_player_pos
+→ Atualização de imagens
+→ (Se vitória) ft_win
+→ (Se fechar) handle_close
+
+
+
+
